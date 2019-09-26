@@ -59,7 +59,7 @@ class TaskDetailTableViewController: UITableViewController {
     private func updateViews() {
         guard let task = task, isViewLoaded else {return}
         
-        let title = task.name
+        title = task.name
         nametextField.text = task.name
         dueDateTextField.text = task.due?.stringValue()
         notesTextView.text = task.notes

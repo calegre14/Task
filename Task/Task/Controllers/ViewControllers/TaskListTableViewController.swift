@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TaskListTableViewController: UITableViewController {
+class TaskListTableViewController: UITableViewController, ButtonTableViewCellDelegate {
 
     var task: Task?
     
@@ -24,6 +24,12 @@ class TaskListTableViewController: UITableViewController {
     }
 
     // MARK: - Table view data source
+    func buttonCellButtonTapped(_ sender: ButtonTableViewCell) {
+        guard let indexPath = tableView.indexPath(for: sender) else {return}
+        let task = TaskController.shared.tasks[indexPath.row]
+        TaskController.shared.toggleIsCompleteFor(task: task)
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+       }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
@@ -31,11 +37,13 @@ class TaskListTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath)
-
+        guard let cell:ButtonTableViewCell = tableView.dequeueReusableCell(withIdentifier: "taskCell", for: indexPath) as? ButtonTableViewCell else {return UITableViewCell()}
+        
+        
         let task = TaskController.shared.tasks[indexPath.row]
-        cell.textLabel?.text = task.name
-
+        cell.update(withTask: task)
+        cell.delegate = self
+        
         return cell
     }
 
@@ -68,5 +76,4 @@ class TaskListTableViewController: UITableViewController {
             destinationVC.task = task
         }
     }
-
 }
