@@ -12,6 +12,7 @@ class TaskDetailTableViewController: UITableViewController {
     
     var task: Task? {
         didSet {
+            loadViewIfNeeded()
             updateViews()
         }
     }
@@ -26,6 +27,7 @@ class TaskDetailTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         dueDateTextField.inputView = dueDatePicker
+        
         updateViews()
     }
 
@@ -57,7 +59,7 @@ class TaskDetailTableViewController: UITableViewController {
     }
     
     private func updateViews() {
-        guard let task = task, isViewLoaded else {return}
+        guard let task = task else {return}
         
         title = task.name
         nametextField.text = task.name

@@ -10,10 +10,23 @@ import Foundation
 import CoreData
 
 class TaskController {
-    static var shared = TaskController()
-    var tasks: [Task] {
+    
+    static let shared = TaskController()
+    
+    var fetchResultsController: NSFetchedResultsController<Task>
+    init() {
         let fetchRequest: NSFetchRequest<Task> = Task.fetchRequest()
-        return (try? CoreDataStack.context.fetch(fetchRequest)) ?? []
+        let isComplete = NSSortDescriptor(key: "isComplete", ascending: true)
+        let timeSort = NSSortDescriptor(key: "due", ascending: false)
+        fetchRequest.sortDescriptors = [isComplete, timeSort]
+        
+        let bigDaddyController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataStack.context, sectionNameKeyPath: "isComplete", cacheName: nil)
+        fetchResultsController = bigDaddyController
+        do {
+            try fetchResultsController.performFetch()
+        } catch {
+            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+        }
     }
     
     func add(taskWithName name: String, notes:String?, due: Date?) {
@@ -34,10 +47,8 @@ class TaskController {
     }
     
     func saveToPersistantStore() {
-        do {
-       try CoreDataStack.context.save()
-        } catch {
-            print("Error in \(#function) : \(error.localizedDescription) \n---\n \(error)")
+        if CoreDataStack.context.hasChanges {
+            try? CoreDataStack.context.save()
         }
     }
     

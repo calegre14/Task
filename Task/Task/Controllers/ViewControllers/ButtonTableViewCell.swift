@@ -12,6 +12,7 @@ class ButtonTableViewCell: UITableViewCell {
     
     var delegate: ButtonTableViewCellDelegate?
     
+    
 
     @IBOutlet weak var primaryLabel: UILabel!
     @IBOutlet weak var completeButton: UIButton!
@@ -23,9 +24,9 @@ class ButtonTableViewCell: UITableViewCell {
     
     func updateButton(_ isComplete: Bool) {
         if isComplete == false {
-            completeButton.setImage((UIImage(systemName: "square")), for: .normal)
+            completeButton.setTitle("⬜️", for: .normal)
         } else {
-            completeButton.setImage((UIImage(systemName: "checkmark.square.fill")), for: .normal)
+            completeButton.setTitle("☑️", for: .normal)
         }
     }
     
